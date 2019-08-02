@@ -1,2 +1,7 @@
 /* button color: #22c29d */
 
+*, 
+body{
+  box-sizing: border-box;
+  color: #414141;
+}

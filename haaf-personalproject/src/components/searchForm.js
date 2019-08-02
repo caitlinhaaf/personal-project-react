@@ -6,14 +6,15 @@ import Button from './button.js'
 
 function SearchForm() {
   return (
-    <div>
+    <div className={styles.searchForm}>
       <h3>Github User:</h3>
       <input 
         className={styles.textinput}
         type="text" 
         name="userName"/>
 
-      <Button buttonTxt="GET USER" />
+      <Button 
+        buttonTxt="GET USER" />
 
     </div>
   );

@@ -1,13 +1,18 @@
 .button{
     font-size: 1.25em;
 
+    display: block;
+    width: 100%;
     margin: 1rem 0;
+
+    border: 0px;
 
     background-color: #22c29d;
     color: white;
     font-weight: bold;
+    cursor: pointer;
 
     padding: .75em;
-    min-width: 300px;
+    /* min-width: 300px; */
     border-radius: .25em;
 }

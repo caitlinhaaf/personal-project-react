@@ -1,11 +1,20 @@
+.searchForm{
+    display: block; 
+    width: 80%;
+    max-width: 400px;
+    margin: 2rem auto;
+}
+
 .textinput{
     font-size: 1.25em;
     display: block;
 
     background: #f4f4f4;
     border: 3px solid #9f9f9f;
-    
+
     padding: .75em;
-    min-width: 300px;
+
+    width: 100%;
+    /* min-width: 300px; */
     border-radius: .25em;
 }

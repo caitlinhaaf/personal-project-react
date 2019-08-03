@@ -16,16 +16,34 @@ import styles from './eventListItem.module.css'
 // - 
 
 const EventListItem = (props) => {
-    // console.log("List Item Props", props.eventData)
+    
+    // define multiple classes based on pull status
+    let classes;
+    switch( props.pullReqStatus ) {
+        case undefined:
+            classes = `${styles.listItem}`
+            break
+        case 'open':
+            classes = `${styles.listItem} ${styles.open}`
+            break
+        case 'closed':
+            classes = `${styles.listItem} ${styles.closed}`
+            break
+    }
+
 
     return (
-        <li className={styles.listItem}>
+        <li className={classes}>
             <a href={props.repoUrl} target="_blank">
-                {props.repoName}
+                <b>{props.repoName}</b>
             </a>
+
+            {/* if pullReqStatus provided, display: */}
             <p>Status: {props.pullReqStatus}</p>
+
         </li>
     );
+
 
 }
 

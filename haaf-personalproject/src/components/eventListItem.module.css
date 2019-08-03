@@ -7,12 +7,14 @@
     border-radius: .25em;
 }
 
+.listItem > p{
+    margin-bottom: .25em;
+}
+
 .closed{
     background-color: #ccc;
 }
 
 .open{
-    /* color: green;
-    border: 3px solid green; */
-    background-color: palegreen;
+    border: 3px solid #22c29d;
 }

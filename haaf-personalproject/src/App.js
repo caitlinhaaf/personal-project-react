@@ -19,9 +19,6 @@ import EventList from './components/eventList'
 
 // USING TEST API DATA
 import {events} from './testresults-events'
-import {repos} from './testresults-repos'
-import {users} from './testresults-users'
-
 
 class App extends React.Component {
 
@@ -29,27 +26,51 @@ class App extends React.Component {
 
     const pullRequestEvents = events.filter( event => (
       event.type === "PullRequestEvent"
-    ))
+    )).reduce( (accumulator, event) => {
+      accumulator=[...accumulator, {
+        id: event.id,
+        repoName: event.payload.pull_request.title,
+        repoUrl: event.payload.pull_request.html_url,
+        pullReqStatus: event.payload.pull_request.state
+      }]
+      return accumulator
+    }, [])
+
+    const forkEvents = events.filter( event => (
+      event.type === "ForkEvent"
+    )).reduce( (accumulator, event) => {      
+      accumulator=[...accumulator, {
+        id: event.id,
+        repoName: event.payload.forkee.full_name,
+        repoUrl: event.payload.forkee.html_url,
+        forkedFrom: event.repo.name
+      }]
+      return accumulator
+    }, [])
 
 
     return (
       <div>
+
+        {/* if state search visible, display search form... */}
         <SearchForm />
   
+        {/* else if state search visible is false, display result data... */}
         <section className="searchResults">
           <h2>User ID</h2>
   
-          {/* <EventList 
+          <EventList 
             header="Recent Forks"
-            events={events}/> */}
+            events={forkEvents}/>
   
           <EventList 
             header="Recent Pull Requests"
             events={pullRequestEvents}/>
+
         </section>
         
   
-      </div>
+      </div>  
     );
   }
   

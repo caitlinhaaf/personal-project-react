@@ -14,5 +14,10 @@
 
     padding: .75em;
     /* min-width: 300px; */
-    border-radius: .25em;
+    border-radius: .5em;
+}
+
+.disabled{
+    background-color: #ccc;
+    cursor: default;
 }

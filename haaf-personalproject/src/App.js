@@ -1,30 +1,65 @@
 import React from 'react';
 import './App.css'
 
-// COMPONENTS
-import SearchForm from './components/searchForm'
-
+// import SearchForm from './components/searchForm'
+import Button from './components/button.js'
 import EventList from './components/eventList'
 
-// INSTRUCTIONS
-// When user information has been returned, hide the form and display the github username with two lists:
-//   - The most recent repositories (repos) forked by the username provided
-//   - their most recent pull requests.
-
-// STATE VALUES
-// - search visible
-// - loading error
-// - results visible
-// - current user ID
-
 // USING TEST API DATA
-import {events} from './testresults-events'
+// import {events} from './testresults-events'
 
 class App extends React.Component {
 
+  state = {
+    searchVisible: true,
+    events: [],
+    searchID: "", 
+    btnDisable: true,
+    isLoading: false,
+    hasError: false,
+    errorMsg: ""
+  };
+
+  searchSubmit = () => {
+    console.log("button clicked!")
+    // fetch("https://api.github.com/users/caitlinhaaf/events")
+
+    fetch(`https://api.github.com/users/${this.state.searchID}/events`)
+      // check status of request before rendering
+      .then(res => {
+        const status = res.status;
+        if (status === 200) return res.json();
+        throw new Error("status not 200");
+      })
+      .then(
+        result => {
+          this.setState({
+            events: result
+          });
+          console.log("API SUCCESS", this.state)
+        },
+        error => {
+          this.setState({
+            hasError: true,
+            errorMsg: error
+          });
+          console.log("API ERROR", this.state)
+        }
+      );
+  }
+
+  searchUpdate = (evt) => {
+    const searchTxt = evt.target.value;
+    const btnDisable = (searchTxt.length > 0) ? false : true;
+    this.setState({
+      searchID: searchTxt,
+      btnDisable: btnDisable
+    })
+  }
+
   render(){
 
-    const pullRequestEvents = events.filter( event => (
+    const pullRequestEvents = this.state.events.filter( event => (
       event.type === "PullRequestEvent"
     )).reduce( (accumulator, event) => {
       accumulator=[...accumulator, {
@@ -34,11 +69,11 @@ class App extends React.Component {
         pullReqStatus: event.payload.pull_request.state
       }]
       return accumulator
-    }, [])
+    }, []);
 
-    const forkEvents = events.filter( event => (
+    const forkEvents = this.state.events.filter( event => (
       event.type === "ForkEvent"
-    )).reduce( (accumulator, event) => {      
+     )).reduce( (accumulator, event) => {      
       accumulator=[...accumulator, {
         id: event.id,
         repoName: event.payload.forkee.full_name,
@@ -46,18 +81,30 @@ class App extends React.Component {
         forkedFrom: event.repo.name
       }]
       return accumulator
-    }, [])
-
+    }, []);
 
     return (
       <div>
-
         {/* if state search visible, display search form... */}
-        <SearchForm />
+        {/* <SearchForm /> */}
+        <section className="searchForm">
+          <h3>Github User:</h3>
+          <input 
+            onChange={this.searchUpdate}
+            className="searchText"
+            type="text" 
+            name="userName"/>
+
+          <Button 
+            buttonTxt="GET USER" 
+            clickEvt={this.searchSubmit}
+            disabled={this.state.btnDisable}
+            />
+        </section>
   
         {/* else if state search visible is false, display result data... */}
         <section className="searchResults">
-          <h2>User ID</h2>
+          <h1 className="searchUser">User ID</h1>
   
           <EventList 
             header="Recent Forks"
@@ -68,8 +115,7 @@ class App extends React.Component {
             events={pullRequestEvents}/>
 
         </section>
-        
-  
+
       </div>  
     );
   }

@@ -3,8 +3,8 @@
     
     padding: .75em 1em;
     margin-bottom: 1em;
-    border: 3px solid #b7b7b7;
-    border-radius: .25em;
+    border: 3px solid #414141;
+    border-radius: .5em;
 }
 
 .listItem > p{
@@ -12,7 +12,8 @@
 }
 
 .closed{
-    background-color: #ccc;
+    background-color: #eee;
+    border: 3px solid #b7b7b7;
 }
 
 .open{

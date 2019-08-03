@@ -4,4 +4,36 @@
 body{
   box-sizing: border-box;
   color: #414141;
+  transition: all .4s;
+}
+
+.searchResults{
+  width: 80%;
+  margin: 0 auto;
+}
+
+.searchUser{
+  text-align: center;
+}
+
+/* Move to search form element module? */
+.searchForm{
+  display: block; 
+  width: 80%;
+  max-width: 400px;
+  margin: 2rem auto;
+}
+
+.searchText{
+  font-size: 1.25em;
+  display: block;
+
+  background: #f4f4f4;
+  border: 3px solid #9f9f9f;
+
+  padding: .5em;
+
+  width: 100%;
+  /* min-width: 300px; */
+  border-radius: .25em;
 }

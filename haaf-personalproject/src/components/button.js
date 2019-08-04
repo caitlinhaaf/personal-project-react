@@ -11,7 +11,8 @@ function Button({buttonTxt, clickEvt, disabled}) {
   return (
     <button 
       className={classes}
-      onClick={clickEvt}>
+      onClick={clickEvt}
+      disabled={disabled}>
         {buttonTxt}
     </button>
   );

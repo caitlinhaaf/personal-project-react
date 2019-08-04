@@ -24,7 +24,7 @@ body{
   margin: 2rem auto;
 }
 
-.searchText{
+.searchInput{
   font-size: 1.25em;
   display: block;
 
@@ -36,4 +36,14 @@ body{
   width: 100%;
   /* min-width: 300px; */
   border-radius: .25em;
+}
+
+.searchInput.error{
+  border: 3px solid red;
+}
+
+.errorMsg{
+  color: red;
+  font-size: .8em;
+  font-style: italic;
 }

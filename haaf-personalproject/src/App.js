@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css'
 
-// import SearchForm from './components/searchForm'
 import Button from './components/button.js'
 import EventList from './components/eventList'
 
@@ -31,9 +30,10 @@ class App extends React.Component {
       .then(
         result => {
           this.setState({
-            events: result,
+
             pullReqEvents: result.filter( event => (
               event.type === "PullRequestEvent"
+            // reduce to map
             )).reduce( (accumulator, event) => {
               accumulator=[...accumulator, {
                 id: event.id,
@@ -43,6 +43,7 @@ class App extends React.Component {
               }]
               return accumulator
             }, []),
+
             forkEvents: result.filter( event => (
               event.type === "ForkEvent"
              )).reduce( (accumulator, event) => {      
@@ -54,6 +55,7 @@ class App extends React.Component {
               }]
               return accumulator  
             }, []),
+
             hasError: false,
             errorMsg: "",
             searchVisible: false

@@ -1,15 +1,19 @@
 import React from 'react';
 import './App.css'
 
-import Button from './components/button.js'
+import SearchForm from './components/searchForm'
 import EventList from './components/eventList'
+
+import Button from './components/button'
+import TextInput from './components/textInput'
+
+import {isPullReqType, isForkType} from './utils/dataTransform.utils'
 
 class App extends React.Component {
 
   state = {
     searchVisible: true,
-    pullReqEvents: [],
-    forkEvents: [],
+    events: [],
     searchID: "", 
     submitDisable: true,
     isLoading: false,
@@ -19,6 +23,8 @@ class App extends React.Component {
 
   // Helper Functions
   searchSubmit = () => {
+    this.setState({isLoading: true})
+
     fetch(`https://api.github.com/users/${this.state.searchID}/events`)
       // check status of request before rendering
       .then(res => {
@@ -30,48 +36,27 @@ class App extends React.Component {
       .then(
         result => {
           this.setState({
-
-            pullReqEvents: result.filter( event => (
-              event.type === "PullRequestEvent"
-            // reduce to map
-            )).reduce( (accumulator, event) => {
-              accumulator=[...accumulator, {
-                id: event.id,
-                repoName: event.payload.pull_request.title,
-                repoUrl: event.payload.pull_request.html_url,
-                pullReqStatus: event.payload.pull_request.state
-              }]
-              return accumulator
-            }, []),
-
-            forkEvents: result.filter( event => (
-              event.type === "ForkEvent"
-             )).reduce( (accumulator, event) => {      
-              accumulator=[...accumulator, {
-                id: event.id,
-                repoName: event.payload.forkee.full_name,
-                repoUrl: event.payload.forkee.html_url,
-                forkedFrom: event.repo.name
-              }]
-              return accumulator  
-            }, []),
-
+            events: result.filter( event => (
+              isPullReqType(event.type) || isForkType(event.type)
+            )),
             hasError: false,
             errorMsg: "",
-            searchVisible: false
+            searchVisible: false,
+            isLoading: false,
           });
         },
         error => {
           this.setState({
             hasError: true,
-            errorMsg: error.message
+            errorMsg: error.message,
+            isLoading: false,
           });
         }
       );
   }
 
-  searchUpdate = (evt) => {
-    const searchTxt = evt.target.value;
+  searchUpdate = (event) => {
+    const searchTxt = event.target.value;
     const submitDisable = (searchTxt.length > 0) ? false : true;
     this.setState({
       searchID: searchTxt,
@@ -91,21 +76,45 @@ class App extends React.Component {
 
   // Render
   render(){
+    const pullReqEvents = this.state.events.filter( event => (
+      isPullReqType(event.type)
+    )).map( event => (
+      {
+        id: event.id,
+        repoName: event.payload.pull_request.title,
+        repoUrl: event.payload.pull_request.html_url,
+        pullReqStatus: event.payload.pull_request.state
+      }
+    ))
+
+    const forkEvents = this.state.events.filter(event => (
+      isForkType(event.type)
+    )).map(event => (      
+      {
+        id: event.id,
+        repoName: event.payload.forkee.full_name,
+        repoUrl: event.payload.forkee.html_url,
+        forkedFrom: event.repo.name
+      }
+    ));
+
     return (
       <section>
+
         {
           this.state.searchVisible ? (
+
+            // <SearchForm 
+            //   searchSubmit={this.searchSubmit}
+            //   searchUpdate={this.searchUpdate}/>
+              
             <section className="searchForm">
               <h3>Github User:</h3>
-              <input 
-                onChange={this.searchUpdate}
-                className={(!this.state.hasError) ? "searchInput" : "searchInput error"}
-                type="text" 
-                name="userName"/>
-              
-              { this.state.hasError &&
-                  <p className="errorMsg">{this.state.errorMsg}</p>
-              }
+
+              <TextInput 
+                updateEvent = {this.searchUpdate}
+                hasError = {this.state.hasError}
+                errorMsg = {this.state.errorMsg}/>
 
               <Button 
                 buttonTxt="GET USER" 
@@ -113,7 +122,9 @@ class App extends React.Component {
                 disabled={this.state.submitDisable}
                 />
             </section>
+
           ) : (
+            
             <section className="searchResults">
               <Button 
                   buttonTxt="&larr; Back to Search"
@@ -123,14 +134,15 @@ class App extends React.Component {
         
                 <EventList 
                   header="Recent Forks"
-                  events={this.state.forkEvents}/>
+                  events={forkEvents}/>
         
                 <EventList 
                   header="Recent Pull Requests"
-                  events={this.state.pullReqEvents}/>
+                  events={pullReqEvents}/>
 
               </section>
           )
+
         }
       </section>  
     );

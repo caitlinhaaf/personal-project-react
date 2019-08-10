@@ -2,10 +2,7 @@ import React from 'react';
 
 import styles from './eventListItem.module.css'
 
-
-// const EventListItem = ({pullReqStatus, repoName, repoUrl, forkedFrom, ...rest}) => {
 const EventListItem = ({repoName, repoUrl, statusClass, ...rest}) => {
-    // define multiple classes based on pull status, if defined
     let classes;
     switch( statusClass ) {
         case 'open':

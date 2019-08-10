@@ -2,7 +2,7 @@ import React from 'react';
 
 import styles from './textInput.module.css'
 
-function TextInput({updateEvent, hasError, errorMsg, ...rest}) {
+const TextInput =({updateEvent, hasError, errorMsg, ...rest}) => {
 
   const classes = (hasError === true) ? 
     `${styles.textInput} ${styles.error}` 
@@ -18,7 +18,7 @@ function TextInput({updateEvent, hasError, errorMsg, ...rest}) {
             name="userName"/>
         
         { hasError &&
-            <p className="errorMsg">{errorMsg}</p>
+            <p className={styles.errorMsg}>{errorMsg}</p>
         }
     </div>
   );

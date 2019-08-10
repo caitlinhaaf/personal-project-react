@@ -5,6 +5,8 @@ body{
   transition: all .4s;
 }
 
+
+
 .searchResults{
   width: 80%;
   margin: 0 auto;
@@ -12,12 +14,4 @@ body{
 
 .searchUser{
   text-align: center;
-}
-
-/* Move to search form element module? */
-.searchForm{
-  display: block; 
-  width: 80%;
-  max-width: 400px;
-  margin: 2rem auto;
 }

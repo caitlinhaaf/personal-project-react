@@ -6,15 +6,15 @@ import EventList from './components/eventList'
 import Loader from './components/loader'
 
 import Button from './components/button'
-import TextInput from './components/textInput'
 
 import {isPullReqType, isForkType} from './utils/dataTransform.utils'
+import {setErrorState, setEventData, setNewSearch, searchIdUpdate} from './utils/actions'
 
 class App extends React.Component {
 
   state = {
-    searchVisible: true,
     events: [],
+    searchVisible: true,
     searchID: "", 
     submitDisable: true,
     isLoading: false,
@@ -24,10 +24,11 @@ class App extends React.Component {
 
   // Helper Functions
   searchSubmit = () => {
+
     this.setState({isLoading: true})
 
     fetch(`https://api.github.com/users/${this.state.searchID}/events`)
-      // check status of request before rendering
+      // check status of request before proceeding, throw error if neccessary
       .then(res => {
         const status = res.status;
         if (status === 200) return res.json();
@@ -36,47 +37,25 @@ class App extends React.Component {
       })
       .then(
         result => {
-          this.setState({
-            events: result.filter( event => (
-              isPullReqType(event.type) || isForkType(event.type)
-            )),
-            hasError: false,
-            errorMsg: "",
-            searchVisible: false,
-            isLoading: false,
-          });
+          this.setState(setEventData(result))
         },
         error => {
-          this.setState({
-            hasError: true,
-            errorMsg: error.message,
-            isLoading: false,
-          });
+          this.setState(setErrorState(error.message))
         }
       );
   }
 
-  searchUpdate = (event) => {
-    const searchTxt = event.target.value;
-    const submitDisable = (searchTxt.length > 0) ? false : true;
-    this.setState({
-      searchID: searchTxt,
-      submitDisable: submitDisable
-    })
+  searchUpdate = ( e ) => {
+    const searchTxt = e.target.value;
+    this.setState(searchIdUpdate(searchTxt))
   }
 
-  backToSearch = () => {
-    this.setState({
-      searchVisible : true, 
-      pullReqEvents: [],
-      forkEvents: [],
-      searchID: "",
-      submitDisable: true
-    })
-  }
+  backToSearch = () => {this.setState(setNewSearch())}
 
   // Render
   render(){
+
+    // transform event data before passing to smaller components
     const pullReqEvents = this.state.events.filter( event => (
       isPullReqType(event.type)
     )).map( event => (
@@ -102,33 +81,20 @@ class App extends React.Component {
     return (
       <section>
 
+        {/* overlay loader element if loading events*/}
         { (this.state.isLoading && <Loader />) }
 
         {
           this.state.searchVisible ? (
 
-            // <SearchForm 
-            //   searchSubmit={this.searchSubmit}
-            //   searchUpdate={this.searchUpdate}
-            //   submitDisable={this.state.submitDisable}
-            //   hasError={this.state.hasError}
-            //   errorMsg={this.state.errorMsg}/>
-              
-            <section className="searchForm">
-              <h3>Github User:</h3>
-
-              <TextInput 
-                updateEvent = {this.searchUpdate}
-                hasError = {this.state.hasError}
-                errorMsg = {this.state.errorMsg}/>
-
-              <Button 
-                clickEvt={this.searchSubmit}
-                disabled={this.state.submitDisable}
-                >
-                GET USER
-              </Button>
-            </section>
+            <SearchForm 
+              searchSubmit={this.searchSubmit}
+              searchUpdate={this.searchUpdate}
+              submitDisable={this.state.submitDisable}
+              hasError={this.state.hasError}
+              errorMsg={this.state.errorMsg}>
+               <h3>Github User:</h3>
+            </SearchForm>
 
           ) : (
             
@@ -147,10 +113,8 @@ class App extends React.Component {
                 <EventList 
                   header="Recent Pull Requests"
                   events={pullReqEvents}/>
-
               </section>
           )
-
         }
       </section>  
     );

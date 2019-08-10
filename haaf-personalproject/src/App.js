@@ -3,6 +3,7 @@ import './App.css'
 
 import SearchForm from './components/searchForm'
 import EventList from './components/eventList'
+import Loader from './components/loader'
 
 import Button from './components/button'
 import TextInput from './components/textInput'
@@ -100,6 +101,8 @@ class App extends React.Component {
 
     return (
       <section>
+
+        { (this.state.isLoading && <Loader />) }
 
         {
           this.state.searchVisible ? (

@@ -3,10 +3,11 @@ import React from 'react';
 import styles from './eventListItem.module.css'
 
 
-const EventListItem = ({pullReqStatus, repoName, repoUrl, forkedFrom}) => {
+// const EventListItem = ({pullReqStatus, repoName, repoUrl, forkedFrom, ...rest}) => {
+const EventListItem = ({repoName, repoUrl, statusClass, ...rest}) => {
     // define multiple classes based on pull status, if defined
     let classes;
-    switch( pullReqStatus ) {
+    switch( statusClass ) {
         case 'open':
             classes = `${styles.listItem} ${styles.open}`
             break
@@ -25,15 +26,7 @@ const EventListItem = ({pullReqStatus, repoName, repoUrl, forkedFrom}) => {
                 rel="noopener noreferrer" >
                 <b>{repoName}</b>
             </a>
-            {
-                pullReqStatus !== undefined &&
-                <p>Status: {pullReqStatus}</p>
-            }
-
-            {
-                forkedFrom !== undefined &&
-                <p>Forked from: {forkedFrom}</p>
-            }
+            {rest.children}
         </li>
     );
 

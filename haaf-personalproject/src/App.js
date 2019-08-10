@@ -106,7 +106,10 @@ class App extends React.Component {
 
             // <SearchForm 
             //   searchSubmit={this.searchSubmit}
-            //   searchUpdate={this.searchUpdate}/>
+            //   searchUpdate={this.searchUpdate}
+            //   submitDisable={this.state.submitDisable}
+            //   hasError={this.state.hasError}
+            //   errorMsg={this.state.errorMsg}/>
               
             <section className="searchForm">
               <h3>Github User:</h3>
@@ -117,18 +120,20 @@ class App extends React.Component {
                 errorMsg = {this.state.errorMsg}/>
 
               <Button 
-                buttonTxt="GET USER" 
                 clickEvt={this.searchSubmit}
                 disabled={this.state.submitDisable}
-                />
+                >
+                GET USER
+              </Button>
             </section>
 
           ) : (
             
             <section className="searchResults">
               <Button 
-                  buttonTxt="&larr; Back to Search"
-                  clickEvt={this.backToSearch}/>
+                  clickEvt={this.backToSearch}>
+                  &larr; Back to Search
+               </Button>
 
                 <h1 className="searchUser">{this.state.searchID}</h1>
         

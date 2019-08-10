@@ -1,4 +1,3 @@
-
 //check event type
 const isTypeOf = (type) => (
     (t) => t === type

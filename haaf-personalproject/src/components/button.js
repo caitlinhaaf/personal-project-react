@@ -2,7 +2,7 @@ import React from 'react';
 
 import styles from './button.module.css'
 
-function Button({buttonTxt, clickEvt, disabled, ...rest}) {
+function Button({clickEvt, disabled, ...rest}) {
   const classes = (disabled === true) ? 
     `${styles.button} ${styles.disabled}` 
     : 
@@ -13,7 +13,7 @@ function Button({buttonTxt, clickEvt, disabled, ...rest}) {
       className={classes}
       onClick={clickEvt}
       disabled={disabled}>
-        {buttonTxt}
+        {rest.children}
     </button>
   );
 }

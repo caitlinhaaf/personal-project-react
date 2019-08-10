@@ -4,12 +4,8 @@ import styles from './eventList.module.css'
 
 import EventListItem from './eventListItem'
 
-// PROPS:
-// - header 
-// - list of data used to generate list items
 
 const EventList = ({header, events}) => {
-
     return (
         <section>
             <h3>{header}</h3>
@@ -17,15 +13,17 @@ const EventList = ({header, events}) => {
             { events.length >= 1 ? (
                 <ul className={styles.list}>
                     {
-                        events.map( (
-                            {repoName, repoUrl, pullReqStatus, forkedFrom}, 
-                            index) => (
+                        events.map( ({repoName, repoUrl, pullReqStatus, forkedFrom, id}) => (
                                 <EventListItem 
-                                    key={index}
+                                    key={id}
                                     repoName={repoName}
                                     repoUrl={repoUrl}
-                                    pullReqStatus={pullReqStatus}
-                                    forkedFrom={forkedFrom}/>
+                                    statusClass={pullReqStatus}>
+                                        <p>
+                                            { ( pullReqStatus && `Status: ${pullReqStatus}`) }
+                                            { ( forkedFrom && `Forked From: ${forkedFrom}`) }
+                                        </p>
+                                </EventListItem>
                         ))
                     }
                 </ul>

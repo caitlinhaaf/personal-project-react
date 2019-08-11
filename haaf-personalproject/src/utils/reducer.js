@@ -68,7 +68,7 @@ const gitSearchReducer = (state=initialState, action) => {
 };
 
 const rootReducer = combineReducers({
-    gitSearchReducer
+    search: gitSearchReducer
 });
 
 export default rootReducer

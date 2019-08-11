@@ -35,18 +35,4 @@ describe('button component', () => {
         expect(button.toJSON().props.className).toStrictEqual("button disabled")
       })
 
-    // it('disabled button does not fire click event', () => {
-    //     const mockClickEvt = jest.fn();
-    //     const button = Enzyme.shallow((
-    //       <Button 
-    //         clickEvt={mockClickEvt}
-    //         disabled={true}>
-    //           Button Text
-    //       </Button>
-    //     ));
-    //     console.log(button.find('button'))
-    //     button.find('button').simulate('click');
-    //     expect(mockClickEvt.mock.calls.length).toEqual(0);
-    //   })
-
   })

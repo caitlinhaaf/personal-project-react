@@ -14,7 +14,6 @@ const Loader = () => {
                 alt="Github loader"/>
             <p>Loading...</p>
         </div>
-        
     </div>
   );
 }

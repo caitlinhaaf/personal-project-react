@@ -2,13 +2,10 @@ import React from 'react';
 import './App.css'
 
 import SearchForm from './components/searchForm'
-import EventList from './components/eventList'
 import Loader from './components/loader'
+import SearchResults from './components/searchResults'
 
-import Button from './components/button'
-
-import {isPullReqType, isForkType} from './utils/dataTransform.utils'
-import {setErrorState, setEventData, setNewSearch, searchIdUpdate} from './utils/actions'
+import {setErrorState, setEventData, setNewSearch, searchIdUpdate, setEventsLoading} from './utils/actions'
 
 class App extends React.Component {
 
@@ -25,7 +22,7 @@ class App extends React.Component {
   // Helper Functions
   searchSubmit = () => {
 
-    this.setState({isLoading: true})
+    this.setState(setEventsLoading())
 
     fetch(`https://api.github.com/users/${this.state.searchID}/events`)
       // check status of request before proceeding, throw error if neccessary
@@ -45,7 +42,7 @@ class App extends React.Component {
       );
   }
 
-  searchUpdate = ( e ) => {
+  searchUpdate = e => {
     const searchTxt = e.target.value;
     this.setState(searchIdUpdate(searchTxt))
   }
@@ -54,29 +51,6 @@ class App extends React.Component {
 
   // Render
   render(){
-
-    // transform event data before passing to smaller components
-    const pullReqEvents = this.state.events.filter( event => (
-      isPullReqType(event.type)
-    )).map( event => (
-      {
-        id: event.id,
-        repoName: event.payload.pull_request.title,
-        repoUrl: event.payload.pull_request.html_url,
-        pullReqStatus: event.payload.pull_request.state
-      }
-    ))
-
-    const forkEvents = this.state.events.filter(event => (
-      isForkType(event.type)
-    )).map(event => (      
-      {
-        id: event.id,
-        repoName: event.payload.forkee.full_name,
-        repoUrl: event.payload.forkee.html_url,
-        forkedFrom: event.repo.name
-      }
-    ));
 
     return (
       <section>
@@ -97,23 +71,11 @@ class App extends React.Component {
             </SearchForm>
 
           ) : (
-            
-            <section className="searchResults">
-              <Button 
-                  clickEvt={this.backToSearch}>
-                  &larr; Back to Search
-               </Button>
 
-                <h1 className="searchUser">{this.state.searchID}</h1>
-        
-                <EventList 
-                  header="Recent Forks"
-                  events={forkEvents}/>
-        
-                <EventList 
-                  header="Recent Pull Requests"
-                  events={pullReqEvents}/>
-              </section>
+            <SearchResults 
+                header={this.state.searchID}
+                btnEvent={this.backToSearch}
+                events={this.state.events} />
           )
         }
       </section>  

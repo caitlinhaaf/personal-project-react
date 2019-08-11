@@ -39,3 +39,7 @@ export const searchIdUpdate = searchTxt => (
         submitDisable: !isTextFieldPopulated(searchTxt)
       }
 )
+
+export const setEventsLoading = () => (
+  {isLoading: true}
+)

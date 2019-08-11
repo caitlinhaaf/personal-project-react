@@ -1,4 +1,4 @@
-import {setErrorState, setEventData, setNewSearch, searchIdUpdate} from '../utils/actions'
+import {setErrorState, setEventData, setNewSearch, searchIdUpdate, setEventsLoading} from '../utils/actions'
 import {testData} from './dummyGitData'
 
 const {events, prAndForkEventsOnly} = testData
@@ -62,6 +62,12 @@ describe('updating search ID', () => {
                 submitDisable: true
             }
         )
+    })
+})
+
+describe('set event loading state', () => {
+    it('sets loading state to true', () => {
+        expect(setEventsLoading()).toStrictEqual({ isLoading: true})
     })
 })
 

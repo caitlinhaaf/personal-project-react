@@ -1,17 +1,19 @@
 import React from 'react';
+import { connect } from "react-redux";
 
 import styles from './searchResults.module.css'
 
 import Button from './button'
 import EventList from './eventList'
 
+import { setNewSearch } from '../utils/actions'
 import {isPullReqType, isForkType} from '../utils/dataTransform.utils'
 
-const SearchResults =({header, events, btnEvent, ...rest}) => {
+const SearchResults =(props) => {
     const pullReqEvents = 
-        (events)
+        (props.events)
         ?
-        events.filter( event => (
+        props.events.filter( event => (
         isPullReqType(event.type)
         )).map( event => (
         {
@@ -24,9 +26,9 @@ const SearchResults =({header, events, btnEvent, ...rest}) => {
         : []
 
         const forkEvents = 
-            (events)
+            (props.events)
             ?
-            events.filter(event => (
+            props.events.filter(event => (
             isForkType(event.type)
             )).map(event => (      
             {
@@ -41,11 +43,11 @@ const SearchResults =({header, events, btnEvent, ...rest}) => {
   return (
     <div className={styles.results}>
         <Button 
-            clickEvt={btnEvent}>
+            clickEvt={props.setNewSearch}>
             &larr; Back to Search
         </Button>
 
-        <h1 className={styles.header}>{header}</h1>
+        <h1 className={styles.header}>{props.searchID}</h1>
 
         <EventList 
             header="Recent Forks"
@@ -58,4 +60,18 @@ const SearchResults =({header, events, btnEvent, ...rest}) => {
   );
 }
 
-export default SearchResults;
+const mapStateToProps = state => (
+    {
+      events: state.search.events,
+      searchID: state.search.searchID, 
+    }
+  )
+  
+  const mapDispatchToProps = {
+    setNewSearch
+  };
+  
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(SearchResults);

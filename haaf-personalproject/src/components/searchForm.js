@@ -1,24 +1,25 @@
 import React from 'react';
+import { connect } from "react-redux";
 
 import styles from './searchForm.module.css'
 
 import Button from './button'
 import TextInput from './textInput'
 
-const SearchForm = ({searchSubmit, searchUpdate, submitDisable, hasError, errorMsg, ...rest}) => {
+const SearchForm = ({searchSubmit, searchUpdate, ...props}) => {
 
     return(
       <section className={styles.searchForm}>
-        {rest.children}
+        {props.children}
         
         <TextInput 
           updateEvent = {searchUpdate}
-          hasError = {hasError}
-          errorMsg = {errorMsg}/>
+          hasError = {props.hasError}
+          errorMsg = {props.errorMsg}/>
 
         <Button 
           clickEvt={searchSubmit}
-          disabled={submitDisable}
+          disabled={props.submitDisable}
           >
           GET USER
         </Button>
@@ -26,4 +27,15 @@ const SearchForm = ({searchSubmit, searchUpdate, submitDisable, hasError, errorM
     )
 }
 
-export default SearchForm;
+const mapStateToProps = state => (
+  {
+    submitDisable: state.search.submitDisable,
+    hasError: state.search.hasError,
+    errorMsg: state.search.errorMsg
+  }
+)
+
+export default connect(
+  mapStateToProps,
+  null
+)(SearchForm);

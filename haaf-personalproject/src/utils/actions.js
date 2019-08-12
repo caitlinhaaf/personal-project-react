@@ -1,7 +1,5 @@
-export const fetchGitData = (userID) => {
-  console.log("DISPATCHING FETCH!")
-  console.log(this)
-  return (dispatch) => {
+export const fetchGitData = (userID) => (
+  (dispatch) => {
     fetch(`https://api.github.com/users/${userID}/events`)
       .then(res => {
         const status = res.status;
@@ -11,20 +9,28 @@ export const fetchGitData = (userID) => {
       })
       .then(
         result => {
-          dispatch({
-            type: "SET_EVENTS",
-            payload: result
-          })
+          dispatch(setEventData(result))
         },
         error => {
-          dispatch({
-            type: "EVENTS_ERROR",
-            payload: error.message
-          })
+          dispatch(setErrorState(error.message))
         }
       );
   }
-}
+)
+
+export const setEventData = data => (
+  {
+    type: "SET_EVENTS", 
+    payload: data
+  }
+)
+
+export const setErrorState = errorMsg => (
+  {
+    type: "EVENTS_ERROR",
+    payload: errorMsg
+  }
+)
 
 export const setNewSearch = () => (
     {
@@ -32,13 +38,12 @@ export const setNewSearch = () => (
     }
 )
 
-export const searchIdUpdate = searchTxt => {
-    console.log("UPDATING SEARCH ID", searchTxt)
-    return {
+export const searchIdUpdate = searchTxt => (
+    {
       type: "SEARCH_ID_UPDATE",
       payload: searchTxt
     }
-}
+)
 
 export const setEventsLoading = () => (
   {

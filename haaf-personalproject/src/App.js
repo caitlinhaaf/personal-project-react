@@ -7,7 +7,7 @@ import SearchForm from './components/searchForm'
 import Loader from './components/loader'
 import SearchResults from './components/searchResults'
 
-import {fetchGitData, setNewSearch, searchIdUpdate, setEventsLoading} from './utils/actions'
+import {fetchGitData, searchIdUpdate, setEventsLoading} from './utils/actions'
 
 class App extends React.Component {
   // Helper Functions
@@ -22,12 +22,7 @@ class App extends React.Component {
 
   // Render
   render(){
-    console.log("APP PROPS", this.props)
-    console.log(this.props.submitDisable)
-    const { submitDisable, hasError, errorMsg, searchID, events, isLoading, searchVisible  } = this.props;
-
-    console.log(submitDisable)
-
+    const { isLoading, searchVisible  } = this.props;
     return (
       <section>
 
@@ -39,44 +34,29 @@ class App extends React.Component {
 
             <SearchForm 
               searchSubmit={this.searchSubmit}
-              searchUpdate={this.searchUpdate}
-              submitDisable={submitDisable}
-              hasError={hasError}
-              errorMsg={errorMsg}>
+              searchUpdate={this.searchUpdate}>
                <h3>Github User:</h3>
             </SearchForm>
 
           ) : (
-
-            <SearchResults 
-                header={searchID}
-                btnEvent={this.props.setNewSearch}
-                events={events} />
+            <SearchResults />
           )
         }
       </section>  
     );
   }
-  
 }
 
-const mapStateToProps = state => {
-  console.log("MAPPING TO PROPS", state)
-  // console.log(state.gitSearchReducer.events)
-  return {
-    events: state.search.events,
+const mapStateToProps = state => (
+  {
     searchVisible: state.search.searchVisible,
     searchID: state.search.searchID, 
-    submitDisable: state.search.submitDisable,
-    isLoading: state.search.isLoading,
-    hasError: state.search.hasError,
-    errorMsg: state.search.errorMsg
+    isLoading: state.search.isLoading
   }
-}
+)
 
 const mapDispatchToProps = {
   fetchGitData,
-  setNewSearch, 
   searchIdUpdate, 
   setEventsLoading
 };
